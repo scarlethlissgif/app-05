@@ -1,23 +1,136 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-
-//fromulario que reciva nombre, edad -  swutch preguntando si tiene hijos
-// si tiene hijos  un campo que pedira la cantidad de hijos 
-
-//si es menos de 20 años , la suscripcion cuesta la mitad 
-
-//si tiene hijos se aplica un descuento del 7 por cada hijo
-
-//el valor d ela suscripcion del seguro es de 70 dolares 
-//calcular el valor del seguro 
-
+import React, { useState } from 'react';
+import { StyleSheet, Text,TextInput,View,Switch,TouchableOpacity,Alert,} from 'react-native';
 
 export default function SuscripcionesScreen() {
-  return (
-    <View>
-      <Text>SuscripcionesScreen</Text>
-    </View>
-  )
+
+    const [nombre, setNombre] = useState('');
+    const [edad, setEdad] = useState('');
+    const [tieneHijos, setTieneHijos] = useState(false);
+    const [cantidadHijos, setCantidadHijos] = useState('');
+
+    function calcularSeguro() {
+
+        let total = 70;
+
+        if (Number(edad) < 20) {
+            total = total / 2;
+        }
+
+        if (tieneHijos) {
+            total = total - (Number(cantidadHijos) * 7);
+        }
+
+        if (total < 0) {
+            total = 0;
+        }
+
+        Alert.alert(
+            'Resultado',
+            `Nombre: ${nombre}\nValor del seguro: $${total}`
+        );
+    }
+
+    return (
+        <View style={styles.container}>
+
+            <Text style={styles.titulo}>
+                Suscripción
+            </Text>
+
+            <TextInput
+                placeholder="Nombre"
+                style={styles.input}
+                value={nombre}
+                onChangeText={setNombre}
+            />
+
+            <TextInput
+                placeholder="Edad"
+                style={styles.input}
+                keyboardType="numeric"
+                value={edad}
+                onChangeText={setEdad}
+            />
+
+            <View style={styles.switchContainer}>
+
+                <Text>Tiene hijos</Text>
+
+                <Switch
+                    value={tieneHijos}
+                    onValueChange={setTieneHijos}
+                />
+
+            </View>
+
+            {tieneHijos && (
+
+                <TextInput
+                    placeholder="Cantidad de hijos"
+                    style={styles.input}
+                    keyboardType="numeric"
+                    value={cantidadHijos}
+                    onChangeText={setCantidadHijos}
+                />
+
+            )}
+
+            <TouchableOpacity
+                style={styles.boton}
+                onPress={calcularSeguro}
+            >
+                <Text style={styles.txtBoton}>
+                    Calcular
+                </Text>
+            </TouchableOpacity>
+
+        </View>
+    );
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+
+    container: {
+        flex: 1,
+        padding: 20,
+        backgroundColor: '#FFF8E1',
+    },
+
+    titulo: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        color: '#EF6C00',
+        marginBottom: 20,
+    },
+
+    input: {
+        borderWidth: 1,
+        borderColor: '#FFA726',
+        borderRadius: 10,
+        backgroundColor: '#FFF',
+        padding: 12,
+        marginBottom: 15,
+    },
+
+    switchContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 15,
+    },
+
+    boton: {
+        backgroundColor: '#43A047',
+        padding: 15,
+        borderRadius: 10,
+        alignItems: 'center',
+    },
+
+    txtBoton: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+
+});

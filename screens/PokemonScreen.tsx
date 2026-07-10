@@ -1,16 +1,34 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-
-/*leer la api  y tarer una lista de pokemon
-apllicar props */
-
+import { FlatList, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import Tarjeta1 from '../components/Tarjeta1'
 
 export default function PokemonScreen() {
-  return (
-    <View>
-      <Text>PokemonScreen</Text>
-    </View>
-  )
+
+    const [data, setData] = useState([])
+
+    useEffect(() => {
+        cargarDatos()
+    }, [])
+
+    async function cargarDatos() {
+        const resp = await fetch('https://pokeapi.co/api/v2/pokemon/ditto')
+        const json = await resp.json()
+
+        setData(json.game_indices)
+    }
+
+    return (
+        <View>
+            <Text>PokemonScreen</Text>
+
+            <FlatList
+                data={data}
+                renderItem={({ item }) =>
+                    <Tarjeta1 datos={item} />
+                }
+            />
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({})
